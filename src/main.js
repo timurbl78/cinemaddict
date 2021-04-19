@@ -7,15 +7,16 @@ import {createFilmsListTemplate} from './view/films-list';
 import {createShowMoreButtonTemplate} from './view/show-more-button';
 import {createFilmsListExtraTemplate} from './view/films-list-extra';
 import {generateFilm} from './mock/film';
+import {generateComments} from './mock/comments';
+import { createFilmPopupTemplate } from './view/film-popup';
 
 const FILMS_COUNT = 15;
 const FILMS_EXTRA_COUNT = 2;
 
 const data = new Array(FILMS_COUNT + FILMS_EXTRA_COUNT * 2).fill(null).map(() => ({
   film: generateFilm(),
+  comments: generateComments(),
 }));
-
-console.log(data);
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -23,6 +24,7 @@ const render = (container, template, place) => {
 
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
+const siteFooterElement = document.querySelector('.footer');
 
 render(siteHeaderElement, createProfileTemplate(), 'beforeend');
 render(siteMainElement, createMenuTemplate(), 'beforeend');
@@ -50,3 +52,6 @@ siteFilmsExtraListContainersElement.forEach((list, index) => {
     render(container, createFilmCardTemplate(data[FILMS_COUNT + index * FILMS_EXTRA_COUNT + i]), 'beforeend');
   }
 });
+
+
+render(siteFooterElement, createFilmPopupTemplate(data[0]), 'afterend');

@@ -3,7 +3,8 @@ import {
   getRandom,
   getRandomArrayItem,
   getRandomArrayItems
-} from '../utils'
+} from '../utils';
+import dayjs from 'dayjs';
 
 const FILM_GENRES_MIN = 1;
 const FILM_GENRES_MAX = 2;
@@ -11,6 +12,8 @@ const FILM_RELEASE_MIN = 1970;
 const FILM_RELEASE_MAX = 2021;
 const FILM_RATING_MIN = 4.0;
 const FILM_RATING_MAX = 10.0;
+const DURATION_MIN = 50;
+const DURATION_MAX = 160;
 
 const generateFilmName = () => {
   const films = [
@@ -99,14 +102,53 @@ const generateRating = () => {
   return randomRating.toFixed(1);
 }
 
+const generateDuration = () => {
+  return getRandomInteger(DURATION_MIN, DURATION_MAX);
+}
+
+const generateAge = () => {
+  const ages = [
+    '0+',
+    '6+',
+    '12+',
+    '16+',
+    '18+',
+  ];
+
+  return getRandomArrayItem(ages);
+};
+
+const generateCountry = () => {
+  const countries = [
+    'Russia',
+    'Germany',
+    'USA',
+    'France',
+    'Italy',
+    'China',
+    'Japan',
+  ];
+
+  return getRandomArrayItem(countries);
+};
+
 export const generateFilm = () => {
+  const name = generateFilmName();
+
   return {
-    name: generateFilmName(),
+    name: name,
+    nameOriginal: name,
     poster: getPoster(),
     description: generateDescription(),
     comments: generateComments(),
     rating: generateRating(),
-    year: getRandomInteger(FILM_GENRES_MIN, FILM_GENRES_MAX),
+    year: getRandomInteger(FILM_RELEASE_MIN, FILM_RELEASE_MAX),
     genres: generateGenres(),
+    duration: generateDuration(),
+    isInWatchlist: Boolean(getRandomInteger(0, 1)),
+    isWatched: Boolean(getRandomInteger(0, 1)),
+    isFavorite: Boolean(getRandomInteger(0, 1)),
+    age: generateAge(),
+    country: generateCountry(),
   };
 }

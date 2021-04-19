@@ -33,3 +33,11 @@ export const getRandomArrayItems = (items, min, max) => {
 
   return result;
 };
+
+
+export const humanizeFilmDuration = (number) => {
+  let hours = Math.floor(number / 60);
+  const minutes = number - hours * 60;
+  hours = hours ? `${hours}h` : '';
+  return `${hours} ${minutes}m`;
+};
