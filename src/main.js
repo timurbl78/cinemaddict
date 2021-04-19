@@ -6,9 +6,16 @@ import {createFilmCardTemplate} from './view/film-card';
 import {createFilmsListTemplate} from './view/films-list';
 import {createShowMoreButtonTemplate} from './view/show-more-button';
 import {createFilmsListExtraTemplate} from './view/films-list-extra';
+import {generateFilm} from './mock/film';
 
-const FILMS_COUNT = 5;
+const FILMS_COUNT = 15;
 const FILMS_EXTRA_COUNT = 2;
+
+const data = new Array(FILMS_COUNT + FILMS_EXTRA_COUNT * 2).fill(null).map(() => ({
+  film: generateFilm(),
+}));
+
+console.log(data);
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -27,7 +34,7 @@ render(siteFilmsContainerElement, createFilmsListTemplate(), 'beforeend');
 const siteFilmsListContainerElement = siteFilmsContainerElement.querySelector('.films-list__container');
 
 for (let i = 0; i < FILMS_COUNT; i++) {
-  render(siteFilmsListContainerElement, createFilmCardTemplate(), 'beforeend');
+  render(siteFilmsListContainerElement, createFilmCardTemplate(data[i]), 'beforeend');
 }
 
 render(siteFilmsListContainerElement, createShowMoreButtonTemplate(), 'afterend');
@@ -37,9 +44,9 @@ render(siteFilmsContainerElement, createFilmsListExtraTemplate('Top rated'), 'be
 render(siteFilmsContainerElement, createFilmsListExtraTemplate('Most commented'), 'beforeend');
 
 const siteFilmsExtraListContainersElement = siteFilmsContainerElement.querySelectorAll('.films-list--extra');
-siteFilmsExtraListContainersElement.forEach((list) => {
+siteFilmsExtraListContainersElement.forEach((list, index) => {
   const container = list.querySelector('.films-list__container');
   for (let i = 0; i < FILMS_EXTRA_COUNT; i++) {
-    render(container, createFilmCardTemplate(), 'beforeend');
+    render(container, createFilmCardTemplate(data[FILMS_COUNT + index * FILMS_EXTRA_COUNT + i]), 'beforeend');
   }
 });
