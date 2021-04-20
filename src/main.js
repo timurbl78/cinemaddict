@@ -8,7 +8,9 @@ import {createShowMoreButtonTemplate} from './view/show-more-button';
 import {createFilmsListExtraTemplate} from './view/films-list-extra';
 import {generateFilm} from './mock/film';
 import {generateComments} from './mock/comments';
+import {generateFilter} from './mock/filter';
 import { createFilmPopupTemplate } from './view/film-popup';
+import {createFooterStatisticsTemplate} from './view/footer-statistics';
 
 const FILMS_COUNT = 15;
 const FILMS_EXTRA_COUNT = 2;
@@ -17,6 +19,7 @@ const data = new Array(FILMS_COUNT + FILMS_EXTRA_COUNT * 2).fill(null).map(() =>
   film: generateFilm(),
   comments: generateComments(),
 }));
+const filters = generateFilter(data);
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -27,7 +30,7 @@ const siteMainElement = document.querySelector('.main');
 const siteFooterElement = document.querySelector('.footer');
 
 render(siteHeaderElement, createProfileTemplate(), 'beforeend');
-render(siteMainElement, createMenuTemplate(), 'beforeend');
+render(siteMainElement, createMenuTemplate(filters), 'beforeend');
 render(siteMainElement, createSortTemplate(), 'beforeend');
 
 render(siteMainElement, createFilmsContainerTemplate(), 'beforeend');
@@ -53,5 +56,8 @@ siteFilmsExtraListContainersElement.forEach((list, index) => {
   }
 });
 
+const footerStatistics = siteFooterElement.querySelector('.footer__statistics');
+render(footerStatistics, createFooterStatisticsTemplate(data.length), 'beforeend');
 
-render(siteFooterElement, createFilmPopupTemplate(data[0]), 'afterend');
+
+//render(siteFooterElement, createFilmPopupTemplate(data[0]), 'afterend');

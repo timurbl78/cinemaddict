@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import {getRandomInteger, getRandomArrayItem} from '../utils';
+import {getRandomInteger, getRandomArrayItem, getRandomArrayItems} from '../utils';
 
 const COMMENTS_MIN_NUMBER = 0;
 const COMMENTS_MAX_NUMBER = 10;
@@ -24,14 +24,7 @@ const generateText = () => {
     'In rutrum ac purus sit amet tempus.',
   ];
 
-  const amount = getRandomInteger(0, randomText.length - 1);
-  let text = '';
-
-  for (let i = 0; i < amount; i++) {
-    text += randomText[getRandomInteger(0, randomText.length - 1)];
-  }
-
-  return text;
+  return getRandomArrayItem(randomText);
 };
 
 const generateAuthor = () => {

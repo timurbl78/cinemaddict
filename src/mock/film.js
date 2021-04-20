@@ -160,7 +160,7 @@ const generateWriters = () => {
     'Woody Allen',
   ];
 
-  return getRandomArrayItems(writers, 1, 3);
+  return getRandomArrayItems(writers, 2, 3);
 };
 
 const generateActors = () => {
