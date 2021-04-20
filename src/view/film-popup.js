@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import {humanizeFilmDuration} from '../utils';
 
 export const createFilmPopupTemplate = (data) => {
@@ -32,19 +33,19 @@ export const createFilmPopupTemplate = (data) => {
             <table class="film-details__table">
               <tr class="film-details__row">
                 <td class="film-details__term">Director</td>
-                <td class="film-details__cell">Anthony Mann</td>
+                <td class="film-details__cell">${film.director}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Writers</td>
-                <td class="film-details__cell">Anne Wigton, Heinz Herald, Richard Weil</td>
+                <td class="film-details__cell">${film.writers.join(', ')}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Actors</td>
-                <td class="film-details__cell">Erich von Stroheim, Mary Beth Hughes, Dan Duryea</td>
+                <td class="film-details__cell">${film.actors.join(', ')}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">30 March 1945</td>
+                <td class="film-details__cell">${dayjs(film.date).format('D MMMM YYYY')}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>

@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 // Функция из интернета по генерации случайного числа из диапазона
 // Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
 export const getRandomInteger = (a = 1, b = 0) => {
@@ -40,4 +42,10 @@ export const humanizeFilmDuration = (number) => {
   const minutes = number - hours * 60;
   hours = hours ? `${hours}h` : '';
   return `${hours} ${minutes}m`;
+};
+
+export const generateRandomDate = (yearMin, yearMax) => {
+  const yearMinjs = dayjs().year(yearMin);
+  const yearMaxjs = dayjs().year(yearMax);
+  return new Date(yearMinjs.valueOf() + Math.random() * (yearMaxjs.valueOf() - yearMinjs.valueOf()));
 };

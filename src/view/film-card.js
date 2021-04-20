@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import {humanizeFilmDuration} from '../utils';
 
 export const createFilmCardTemplate = (data) => {
@@ -10,7 +11,7 @@ export const createFilmCardTemplate = (data) => {
     <h3 class="film-card__title">${film.name}</h3>
     <p class="film-card__rating">${film.rating}</p>
     <p class="film-card__info">
-      <span class="film-card__year">${film.year}</span>
+      <span class="film-card__year">${dayjs(film.date).format('YYYY')}</span>
       <span class="film-card__duration">${humanizeFilmDuration(film.duration)}</span>
       <span class="film-card__genre">${film.genres[0]}</span>
     </p>

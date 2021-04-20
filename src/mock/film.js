@@ -2,7 +2,8 @@ import {
   getRandomInteger,
   getRandom,
   getRandomArrayItem,
-  getRandomArrayItems
+  getRandomArrayItems,
+  generateRandomDate
 } from '../utils';
 import dayjs from 'dayjs';
 
@@ -132,6 +133,54 @@ const generateCountry = () => {
   return getRandomArrayItem(countries);
 };
 
+const generateDirector = () => {
+  const directors = [
+    'Christopher Nolan',
+    'Quentin Tarantino',
+    'Steven Spielberg',
+    'Richard Linklater',
+    'Alfonso Cuaron',
+    'Martin Scorsese',
+    'Denis Villeneuve',
+    'David Fincher',
+  ];
+
+  return getRandomArrayItem(directors);
+};
+
+const generateWriters = () => {
+  const writers = [
+    'Billy Wilder',
+    'Anne Wigton',
+    'Heinz Herald',
+    'Richard Weil',
+    'Robert Towne',
+    'William Goldman',
+    'Charlie Kaufman',
+    'Woody Allen',
+  ];
+
+  return getRandomArrayItems(writers, 1, 3);
+};
+
+const generateActors = () => {
+  const actors = [
+    'Robert De Niro',
+    'Jack Nicholson',
+    'Marlon Brando',
+    'Denzel Washington',
+    'Katharine Hepburn',
+    'Humphrey Bogart',
+    'Meryl Streep',
+    'Daniel Day-Lewis',
+    'Sidney Poitier',
+    'Clark Gable',
+    'Margot Robbie'
+    ];
+
+  return getRandomArrayItems(actors, 2, 5);
+}
+
 export const generateFilm = () => {
   const name = generateFilmName();
 
@@ -142,7 +191,7 @@ export const generateFilm = () => {
     description: generateDescription(),
     comments: generateComments(),
     rating: generateRating(),
-    year: getRandomInteger(FILM_RELEASE_MIN, FILM_RELEASE_MAX),
+    date: generateRandomDate(FILM_RELEASE_MIN, FILM_RELEASE_MAX),
     genres: generateGenres(),
     duration: generateDuration(),
     isInWatchlist: Boolean(getRandomInteger(0, 1)),
@@ -150,5 +199,8 @@ export const generateFilm = () => {
     isFavorite: Boolean(getRandomInteger(0, 1)),
     age: generateAge(),
     country: generateCountry(),
+    director: generateDirector(),
+    writers: generateWriters(),
+    actors: generateActors(),
   };
 }
