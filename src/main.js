@@ -31,7 +31,7 @@ const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
 const siteFooterElement = document.querySelector('.footer');
 
-render(siteHeaderElement, createProfileTemplate(), 'beforeend');
+render(siteHeaderElement, createProfileTemplate(filters), 'beforeend');
 render(siteMainElement, createMenuTemplate(filters), 'beforeend');
 render(siteMainElement, createSortTemplate(), 'beforeend');
 
