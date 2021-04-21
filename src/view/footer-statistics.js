@@ -1,3 +1,3 @@
 export const createFooterStatisticsTemplate = (number) => {
-  return `<p>${number} movies inside</p>`
+  return `<p>${number} movies inside</p>`;
 };

@@ -53,4 +53,4 @@ export const createPopupWithComments = (comments) => {
     </div>
   </section>
 </div>`;
-}
+};

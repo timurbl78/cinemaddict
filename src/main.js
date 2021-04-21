@@ -9,7 +9,7 @@ import {createFilmsListExtraTemplate} from './view/films-list-extra';
 import {generateFilm} from './mock/film';
 import {generateComments} from './mock/comments';
 import {generateFilter} from './mock/filter';
-import { createFilmPopupTemplate } from './view/film-popup';
+//import { createFilmPopupTemplate } from './view/film-popup';
 import {createFooterStatisticsTemplate} from './view/footer-statistics';
 
 
@@ -50,14 +50,14 @@ if (data.length > FILMS_COUNT_PER_STEP) {
 
     data
       .slice(renderedFilmCount, renderedFilmCount + FILMS_COUNT_PER_STEP)
-      .forEach((el) => render(siteFilmsListContainerElement, createFilmCardTemplate(el), 'beforeend'))
+      .forEach((el) => render(siteFilmsListContainerElement, createFilmCardTemplate(el), 'beforeend'));
 
     renderedFilmCount += FILMS_COUNT_PER_STEP;
 
     if (renderedFilmCount >= data.length) {
       showMoreButton.remove();
     }
-  })
+  });
 }
 
 for (let i = 0; i < Math.min(data.length, FILMS_COUNT_PER_STEP); i++) {

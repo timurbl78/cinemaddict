@@ -3,8 +3,8 @@ const createFilterItemTemplate = (filter, isChecked) => {
   if (name === 'all') {
     return '<a href="#all" class="main-navigation__item">All movies</a>';
   }
-  return `<a href="#${title.toLowerCase()}" class="main-navigation__item ${isChecked ? 'main-navigation__item--active' : ''}">${title} <span class="main-navigation__item-count">${count}</span></a>`
-}
+  return `<a href="#${title.toLowerCase()}" class="main-navigation__item ${isChecked ? 'main-navigation__item--active' : ''}">${title} <span class="main-navigation__item-count">${count}</span></a>`;
+};
 
 export const createMenuTemplate = (filterItems) => {
   const filterItemsTemplate = filterItems

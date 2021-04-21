@@ -5,7 +5,6 @@ import {
   getRandomArrayItems,
   generateRandomDate
 } from '../utils';
-import dayjs from 'dayjs';
 
 const FILM_GENRES_MIN = 1;
 const FILM_GENRES_MAX = 2;
@@ -33,7 +32,7 @@ const generateFilmName = () => {
   ];
 
   return getRandomArrayItem(films);
-}
+};
 
 const generateDescription = () => {
   const randomText = [
@@ -57,10 +56,6 @@ const generateDescription = () => {
   }
 
   return description;
-}
-
-const generateComments = () => {
-  return ``;
 };
 
 const getPoster = () => {
@@ -75,7 +70,7 @@ const getPoster = () => {
   ];
 
   return `./images/posters/${getRandomArrayItem(posters)}`;
-}
+};
 
 const generateGenres = () => {
   const genres = [
@@ -95,17 +90,17 @@ const generateGenres = () => {
   ];
 
   return getRandomArrayItems(genres, FILM_GENRES_MIN, FILM_GENRES_MAX);
-}
+};
 
 const generateRating = () => {
   const randomRating = getRandom(FILM_RATING_MIN, FILM_RATING_MAX);
 
   return randomRating.toFixed(1);
-}
+};
 
 const generateDuration = () => {
   return getRandomInteger(DURATION_MIN, DURATION_MAX);
-}
+};
 
 const generateAge = () => {
   const ages = [
@@ -175,11 +170,11 @@ const generateActors = () => {
     'Daniel Day-Lewis',
     'Sidney Poitier',
     'Clark Gable',
-    'Margot Robbie'
-    ];
+    'Margot Robbie',
+  ];
 
   return getRandomArrayItems(actors, 2, 5);
-}
+};
 
 export const generateFilm = () => {
   const name = generateFilmName();
@@ -189,7 +184,6 @@ export const generateFilm = () => {
     nameOriginal: name,
     poster: getPoster(),
     description: generateDescription(),
-    comments: generateComments(),
     rating: generateRating(),
     date: generateRandomDate(FILM_RELEASE_MIN, FILM_RELEASE_MAX),
     genres: generateGenres(),
@@ -203,4 +197,4 @@ export const generateFilm = () => {
     writers: generateWriters(),
     actors: generateActors(),
   };
-}
+};

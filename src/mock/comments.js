@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import {getRandomInteger, getRandomArrayItem, getRandomArrayItems} from '../utils';
+import {getRandomInteger, getRandomArrayItem} from '../utils';
 
 const COMMENTS_MIN_NUMBER = 0;
 const COMMENTS_MAX_NUMBER = 10;
@@ -56,7 +56,7 @@ export const generateComments = () => {
       emoji: generateEmoji(),
       author: generateAuthor(),
       date:  generateDate(),
-    })
+    });
   }
 
   return comments;
