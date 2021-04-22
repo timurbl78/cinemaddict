@@ -1,26 +1,14 @@
-import {getStatus, createElement} from '../utils';
+import {getStatus} from '../utils';
+import AbstractView from './abstract';
 
-
-export default class Profile {
+export default class Profile extends AbstractView {
   constructor(filters) {
-    this._element = null;
+    super();
     this._filters = filters;
   }
 
   getTemplate() {
     return this._createProfileTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 
   _createProfileTemplate() {

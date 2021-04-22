@@ -1,24 +1,12 @@
-import {createElement} from '../utils.js';
+import AbstractView from './abstract';
 
-export default class NoTask {
+export default class NoTask extends AbstractView {
   constructor() {
-    this._element = null;
+    super();
   }
 
   getTemplate() {
     return this._createNoFilmsTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 
   _createNoFilmsTemplate() {

@@ -1,25 +1,13 @@
-import {createElement} from '../utils';
+import AbstractView from './abstract';
 
-export default class Menu {
+export default class Menu extends AbstractView {
   constructor(filters) {
-    this._element = null;
+    super();
     this._filters = filters;
   }
 
   getTemplate() {
     return this._createMenuTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 
   _createMenuTemplate() {

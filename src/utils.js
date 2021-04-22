@@ -3,7 +3,6 @@ import dayjs from 'dayjs';
 export const RenderPosition = {
   AFTERBEGIN: 'afterbegin',
   BEFOREEND: 'beforeend',
-  AFTEREND: 'afterend',
 };
 
 export const renderElement = (container, element, place) => {

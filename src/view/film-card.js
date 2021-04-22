@@ -1,26 +1,15 @@
 import dayjs from 'dayjs';
-import {humanizeFilmDuration, createElement} from '../utils';
+import AbstractView from './abstract';
+import {humanizeFilmDuration} from '../utils';
 
-export default class FilmCard {
+export default class FilmCard extends AbstractView {
   constructor(data) {
+    super();
     this._data = data;
-    this._element = null;
   }
 
   getTemplate() {
     return this._createFilmCardTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 
   _createFilmCardTemplate() {

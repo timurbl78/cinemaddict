@@ -1,24 +1,12 @@
-import {createElement} from '../utils';
+import AbstractView from './abstract';
 
-export default class FilmsList {
+export default class FilmsList extends AbstractView {
   constructor() {
-    this._element = null;
+    super();
   }
 
   getTemplate() {
     return this._createFilmsListTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 
   _createFilmsListTemplate() {
