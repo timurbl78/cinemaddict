@@ -1,4 +1,4 @@
-import {getStatus, createElement} from '../utils'
+import {getStatus, createElement} from '../utils';
 
 
 export default class Profile {
@@ -25,7 +25,7 @@ export default class Profile {
 
   _createProfileTemplate() {
     let amount = 0;
-    this._filters.forEach(filter => {
+    this._filters.forEach((filter) => {
       if (filter.name === 'history') {
         amount  = filter.count;
       }
@@ -34,5 +34,5 @@ export default class Profile {
       <p class="profile__rating">${getStatus(amount)}</p>
       <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
     </section>`;
-  };
+  }
 }

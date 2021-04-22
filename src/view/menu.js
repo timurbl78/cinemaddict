@@ -32,7 +32,7 @@ export default class Menu {
       </div>
       <a href="#stats" class="main-navigation__additional">Stats</a>
     </nav>`;
-  };
+  }
 
   _createFilterItemTemplate(filter, isChecked) {
     const {name, title, count} = filter;
@@ -40,5 +40,5 @@ export default class Menu {
       return '<a href="#all" class="main-navigation__item">All movies</a>';
     }
     return `<a href="#${title.toLowerCase()}" class="main-navigation__item ${isChecked ? 'main-navigation__item--active' : ''}">${title} <span class="main-navigation__item-count">${count}</span></a>`;
-  };
+  }
 }

@@ -126,7 +126,7 @@ const renderBoard = (siteMainElement, data) => {
       renderFilm(container, siteBodyElemnt, data[index * FILMS_EXTRA_COUNT + i]);
     }
   });
-}
+};
 
 renderElement(siteHeaderElement, new ProfileView(filters).getElement(), RenderPosition.BEFOREEND);
 renderElement(siteMainElement, new MenuView(filters).getElement(), RenderPosition.BEFOREEND);

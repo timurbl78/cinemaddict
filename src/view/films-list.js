@@ -28,5 +28,5 @@ export default class FilmsList {
     <div class="films-list__container">
     </div>
     </section>`;
-  };
+  }
 }

@@ -24,5 +24,5 @@ export default class FilmsContainer {
 
   _createFilmsContainerTemplate() {
     return '<section class="films"></section>';
-  };
+  }
 }

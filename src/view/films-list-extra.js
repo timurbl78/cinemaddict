@@ -29,5 +29,5 @@ export default class FilmsListExtra {
     <div class="films-list__container">
     </div>
     </section>`;
-  };
+  }
 }
