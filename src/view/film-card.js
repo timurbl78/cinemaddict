@@ -6,6 +6,8 @@ export default class FilmCard extends AbstractView {
   constructor(data) {
     super();
     this._data = data;
+
+    this._openPopupClickHandler = this._openPopupClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -35,5 +37,18 @@ export default class FilmCard extends AbstractView {
         <button class="film-card__controls-item button film-card__controls-item--favorite ${film.isFavorite ? 'film-card__controls-item--active' : ''}" type="button">Mark as favorite</button>
       </div>
     </article>`;
+  }
+
+  _openPopupClickHandler(evt) {
+    evt.preventDefault();
+
+    this._callback.openPopupClick();
+  }
+
+  setOpenPopupClickHandler(callback) {
+    this._callback.openPopupClick = callback;
+    this.getElement().querySelector('.film-card__poster').addEventListener('click', this._openPopupClickHandler);
+    this.getElement().querySelector('.film-card__comments').addEventListener('click', this._openPopupClickHandler);
+    this.getElement().querySelector('.film-card__title').addEventListener('click', this._openPopupClickHandler);
   }
 }
