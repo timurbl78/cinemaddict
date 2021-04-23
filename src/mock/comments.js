@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import {getRandomInteger, getRandomArrayItem} from '../utils';
+import {getRandomInteger, getRandomArrayItem} from '../utils/common';
 
 const COMMENTS_MIN_NUMBER = 0;
 const COMMENTS_MAX_NUMBER = 10;

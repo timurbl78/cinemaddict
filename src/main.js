@@ -14,7 +14,7 @@ import {generateFilm} from './mock/film';
 import {generateComments} from './mock/comments';
 import {generateFilter} from './mock/filter';
 
-import {renderElement, RenderPosition} from './utils';
+import {render, RenderPosition} from './utils/render';
 
 
 const FILMS_COUNT = 23;
@@ -62,7 +62,7 @@ const renderFilm = (filmsContainer, popupContainer, film) => {
     document.removeEventListener('keydown', onEscKeyDown);
   });
 
-  renderElement(filmsContainer, filmCardComponent.getElement(), RenderPosition.BEFOREEND);
+  render(filmsContainer, filmCardComponent.getElement(), RenderPosition.BEFOREEND);
 };
 
 const renderBoard = (siteMainElement, data) => {
@@ -70,22 +70,22 @@ const renderBoard = (siteMainElement, data) => {
   const filmsListComponent = new FilmsListView();
 
   if (FILMS_COUNT === 0) {
-    renderElement(siteMainElement, siteFilmsContainerComponent.getElement(), RenderPosition.BEFOREEND);
-    renderElement(siteFilmsContainerComponent.getElement(), filmsListComponent.getElement(), RenderPosition.BEFOREEND);
-    renderElement(filmsListComponent.getElement(), new NoFilmsView().getElement(), RenderPosition.AFTERBEGIN);
+    render(siteMainElement, siteFilmsContainerComponent.getElement(), RenderPosition.BEFOREEND);
+    render(siteFilmsContainerComponent.getElement(), filmsListComponent.getElement(), RenderPosition.BEFOREEND);
+    render(filmsListComponent.getElement(), new NoFilmsView().getElement(), RenderPosition.AFTERBEGIN);
     return;
   }
 
-  renderElement(siteMainElement, new SortView().getElement(), RenderPosition.BEFOREEND);
-  renderElement(siteMainElement, siteFilmsContainerComponent.getElement(), RenderPosition.BEFOREEND);
-  renderElement(siteFilmsContainerComponent.getElement(), filmsListComponent.getElement(), RenderPosition.BEFOREEND);
+  render(siteMainElement, new SortView().getElement(), RenderPosition.BEFOREEND);
+  render(siteMainElement, siteFilmsContainerComponent.getElement(), RenderPosition.BEFOREEND);
+  render(siteFilmsContainerComponent.getElement(), filmsListComponent.getElement(), RenderPosition.BEFOREEND);
 
   const siteFilmsListContainerElement = siteFilmsContainerComponent.getElement().querySelector('.films-list__container');
 
   if (data.length > FILMS_COUNT_PER_STEP) {
     const showMoreButtonComponent = new ShowMoreButtonView();
     let renderedFilmCount = FILMS_COUNT_PER_STEP;
-    renderElement(filmsListComponent.getElement(), showMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
+    render(filmsListComponent.getElement(), showMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
 
     showMoreButtonComponent.setClickHandler(() => {
       data
@@ -105,8 +105,8 @@ const renderBoard = (siteMainElement, data) => {
     renderFilm(siteFilmsListContainerElement, siteBodyElemnt, data[i]);
   }
 
-  renderElement(siteFilmsContainerComponent.getElement(), new FilmsListExtraView('Top rated').getElement(), RenderPosition.BEFOREEND);
-  renderElement(siteFilmsContainerComponent.getElement(), new FilmsListExtraView('Most commented').getElement(), RenderPosition.BEFOREEND);
+  render(siteFilmsContainerComponent.getElement(), new FilmsListExtraView('Top rated').getElement(), RenderPosition.BEFOREEND);
+  render(siteFilmsContainerComponent.getElement(), new FilmsListExtraView('Most commented').getElement(), RenderPosition.BEFOREEND);
 
   const siteFilmsExtraListContainersElement = siteFilmsContainerComponent.getElement().querySelectorAll('.films-list--extra');
   siteFilmsExtraListContainersElement.forEach((list, index) => {
@@ -117,10 +117,10 @@ const renderBoard = (siteMainElement, data) => {
   });
 };
 
-renderElement(siteHeaderElement, new ProfileView(filters).getElement(), RenderPosition.BEFOREEND);
-renderElement(siteMainElement, new MenuView(filters).getElement(), RenderPosition.BEFOREEND);
+render(siteHeaderElement, new ProfileView(filters).getElement(), RenderPosition.BEFOREEND);
+render(siteMainElement, new MenuView(filters).getElement(), RenderPosition.BEFOREEND);
 
 renderBoard(siteMainElement, data);
 
 const footerStatistics = siteFooterElement.querySelector('.footer__statistics');
-renderElement(footerStatistics, new FooterStatisticsView(data.length).getElement(), RenderPosition.BEFOREEND);
+render(footerStatistics, new FooterStatisticsView(data.length).getElement(), RenderPosition.BEFOREEND);

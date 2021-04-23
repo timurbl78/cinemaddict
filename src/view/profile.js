@@ -1,4 +1,4 @@
-import {getStatus} from '../utils';
+import {getStatus} from '../utils/film';
 import AbstractView from './abstract';
 
 export default class Profile extends AbstractView {

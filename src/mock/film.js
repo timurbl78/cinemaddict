@@ -2,9 +2,9 @@ import {
   getRandomInteger,
   getRandom,
   getRandomArrayItem,
-  getRandomArrayItems,
-  generateRandomDate
-} from '../utils';
+  getRandomArrayItems
+} from '../utils/common';
+import {generateRandomDate} from '../utils/film';
 
 const FILM_GENRES_MIN = 1;
 const FILM_GENRES_MAX = 2;

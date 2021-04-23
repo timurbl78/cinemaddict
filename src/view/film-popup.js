@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import AbstractView from './abstract';
-import {humanizeFilmDuration} from '../utils';
+import {humanizeFilmDuration} from '../utils/film';
 
 export default class FilmPopup extends AbstractView {
   constructor(data) {
