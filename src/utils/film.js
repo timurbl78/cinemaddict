@@ -25,3 +25,33 @@ export const getStatus = (amount) => {
   }
   return 'Movie Buff';
 };
+
+const getWeightForNullDate = (dateA, dateB) => {
+  if (dateA === null && dateB === null) {
+    return 0;
+  }
+
+  if (dateA === null) {
+    return 1;
+  }
+
+  if (dateB === null) {
+    return -1;
+  }
+
+  return null;
+};
+
+export const sortDateDown = (filmA, filmB) => {
+  const weight = getWeightForNullDate(filmA.film.date, filmB.film.date);
+
+  if (weight !== null) {
+    return weight;
+  }
+
+  return dayjs(filmB.film.date).diff(dayjs(filmA.film.date));
+};
+
+export const sortRatingDown = (filmA, filmB) => {
+  return filmB.film.rating - filmA.film.rating;
+};
