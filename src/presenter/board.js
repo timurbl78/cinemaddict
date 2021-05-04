@@ -1,11 +1,10 @@
 import SortView from '../view/sort';
 import FilmsContainerView from '../view/films-container';
-import FilmCardView from '../view/film-card';
 import FilmsListView from '../view/films-list';
 import ShowMoreButtonView from '../view/show-more-button';
 import FilmsListExtraView from '../view/films-list-extra';
-import FilmPopupView from '../view/film-popup';
 import NoFilmsView from '../view/no-films';
+import FilmPresenter from './film';
 import { remove, render, RenderPosition } from '../utils/render';
 
 const FILMS_COUNT_PER_STEP = 5;
@@ -32,36 +31,8 @@ export default class Board {
   }
 
   _renderFilm(filmsContainer, popupContainer, film) {
-    const filmCardComponent = new FilmCardView(film);
-    const filmPopupComponent = new FilmPopupView(film);
-
-    const openPopup = () => {
-      popupContainer.appendChild(filmPopupComponent.getElement());
-    };
-
-    const closePopup = () => {
-      popupContainer.removeChild(filmPopupComponent.getElement());
-    };
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
-        evt.preventDefault();
-        closePopup();
-        document.removeEventListener('keydown', onEscKeyDown);
-      }
-    };
-
-    filmCardComponent.setOpenPopupClickHandler(() => {
-      openPopup();
-      document.addEventListener('keydown', onEscKeyDown);
-    });
-
-    filmPopupComponent.setClosePopupClickHandler(() => {
-      closePopup();
-      document.removeEventListener('keydown', onEscKeyDown);
-    });
-
-    render(filmsContainer, filmCardComponent, RenderPosition.BEFOREEND);
+    const filmPresenter = new FilmPresenter(filmsContainer, popupContainer);
+    filmPresenter.init(film);
   }
 
   _renderFilms(from, to, filmsListContainer) {
