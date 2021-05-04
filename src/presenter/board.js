@@ -2,7 +2,7 @@ import SortView from '../view/sort';
 import FilmsContainerView from '../view/films-container';
 import FilmsListView from '../view/films-list';
 import ShowMoreButtonView from '../view/show-more-button';
-import FilmsListExtraView from '../view/films-list-extra';
+// import FilmsListExtraView from '../view/films-list-extra';
 import NoFilmsView from '../view/no-films';
 import FilmPresenter from './film';
 import { remove, render, RenderPosition } from '../utils/render';
@@ -11,7 +11,7 @@ import {sortDateDown, sortRatingDown} from '../utils/film';
 import {SortType} from '../const.js';
 
 const FILMS_COUNT_PER_STEP = 5;
-const FILMS_EXTRA_COUNT = 2;
+// const FILMS_EXTRA_COUNT = 2;
 
 export default class Board {
   constructor(boardContainer) {
@@ -37,7 +37,6 @@ export default class Board {
   }
 
   _handleFilmChange(updatedFilm) {
-    console.log(updatedFilm);
     this._boardFilms = updateItem(this._boardFilms, updatedFilm);
     this._sourcedBoardFilms = updateItem(this._sourcedBoardFilms, updatedFilm);
     this._filmPresenter[updatedFilm.film.id].init(updatedFilm);
@@ -59,7 +58,6 @@ export default class Board {
   }
 
   _handleSortTypeChange(sortType) {
-    console.log(sortType);
     if (this._currentSortType === sortType) {
       return;
     }
