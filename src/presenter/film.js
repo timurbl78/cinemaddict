@@ -41,8 +41,8 @@ export default class Film {
       replace(this._filmPopupComponent, prevFilmPopupComponent);
     }
 
-    remove(prevTaskComponent);
-    remove(prevTaskEditComponent);
+    remove(prevFilmCardComponent);
+    remove(prevFilmPopupComponent);
   }
 
   destroy() {
