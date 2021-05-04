@@ -1,3 +1,4 @@
+import {nanoid} from 'nanoid';
 import {
   getRandomInteger,
   getRandom,
@@ -180,6 +181,7 @@ export const generateFilm = () => {
   const name = generateFilmName();
 
   return {
+    id: nanoid(),
     name: name,
     nameOriginal: name,
     poster: getPoster(),
