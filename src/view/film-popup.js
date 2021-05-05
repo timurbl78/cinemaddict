@@ -1,13 +1,16 @@
 import dayjs from 'dayjs';
-import AbstractView from './abstract';
+import SmartView from './smart';
 import {humanizeFilmDuration} from '../utils/film';
 
-export default class FilmPopup extends AbstractView {
+export default class FilmPopup extends SmartView {
   constructor(data) {
     super();
     this._data = data;
 
     this._closePopupClickHandler = this._closePopupClickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._watchedClickHandler = this._watchedClickHandler.bind(this);
+    this._watchListClickHandler = this._watchListClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -161,8 +164,38 @@ export default class FilmPopup extends AbstractView {
     this._callback.closePopupClick();
   }
 
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  }
+
+  _watchedClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.watchedClick();
+  }
+
+  _watchListClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.watchListClick();
+  }
+
   setClosePopupClickHandler(callback) {
     this._callback.closePopupClick = callback;
     this.getElement().querySelector('.film-details__close-btn').addEventListener('click', this._closePopupClickHandler);
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector('#favorite').addEventListener('click', this._favoriteClickHandler);
+  }
+
+  setWatchedClickHandler(callback) {
+    this._callback.watchedClick = callback;
+    this.getElement().querySelector('#watched').addEventListener('click', this._watchedClickHandler);
+  }
+
+  setWatchListClickHandler(callback) {
+    this._callback.watchListClick = callback;
+    this.getElement().querySelector('#watchlist').addEventListener('click', this._watchListClickHandler);
   }
 }

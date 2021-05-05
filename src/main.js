@@ -19,16 +19,16 @@ const data = new Array(FILMS_COUNT).fill(null).map(() => ({
 }));
 const filters = generateFilter(data);
 
-const siteBodyElemnt = document.querySelector('body');
-const siteHeaderElement = siteBodyElemnt.querySelector('.header');
-const siteMainElement = siteBodyElemnt.querySelector('.main');
-const siteFooterElement = siteBodyElemnt.querySelector('.footer');
+const siteBodyElement = document.querySelector('body');
+const siteHeaderElement = siteBodyElement.querySelector('.header');
+const siteMainElement = siteBodyElement.querySelector('.main');
+//const siteFooterElement = siteBodyElement.querySelector('.footer');
 
 render(siteHeaderElement, new ProfileView(filters).getElement(), RenderPosition.BEFOREEND);
 render(siteMainElement, new MenuView(filters).getElement(), RenderPosition.BEFOREEND);
+const footerStatistics = siteBodyElement.querySelector('.footer__statistics');
+render(footerStatistics, new FooterStatisticsView(data.length).getElement(), RenderPosition.BEFOREEND);
 
-const boardPresenter = new BoardPresenter(siteMainElement);
+const boardPresenter = new BoardPresenter(siteMainElement, siteBodyElement);
 boardPresenter.init(data);
 
-const footerStatistics = siteFooterElement.querySelector('.footer__statistics');
-render(footerStatistics, new FooterStatisticsView(data.length).getElement(), RenderPosition.BEFOREEND);

@@ -1,31 +1,27 @@
 import SortView from '../view/sort';
 import FilmsContainerView from '../view/films-container';
-import FilmsListView from '../view/films-list';
-import ShowMoreButtonView from '../view/show-more-button';
-// import FilmsListExtraView from '../view/films-list-extra';
 import NoFilmsView from '../view/no-films';
-import FilmPresenter from './film';
+import FilmListPresenter from './film-list';
 import { remove, render, RenderPosition } from '../utils/render';
-import {updateItem} from '../utils/common';
 import {sortDateDown, sortRatingDown} from '../utils/film';
 import {SortType} from '../const.js';
 
-const FILMS_COUNT_PER_STEP = 5;
-// const FILMS_EXTRA_COUNT = 2;
-
 export default class Board {
-  constructor(boardContainer) {
+  constructor(boardContainer, popupContainer) {
     this._boardContainer = boardContainer;
+    this._popupContainer = popupContainer;
+
     this._filmPresenter = {};
-    this._renderedFilmCount = FILMS_COUNT_PER_STEP;
+
+    this._mainListPresenter = null;
+    this._topRatedListPresenter = null;
+    this._topCommentedListPresenter = null;
+
     this._currentSortType = SortType.DEFAULT;
 
     this._filmsContainerComponent = new FilmsContainerView();
-    this._filmsListComponent = new FilmsListView();
     this._noFilmsComponent = new NoFilmsView();
-    this._showMoreButtonComponent = new ShowMoreButtonView();
 
-    this._handleFilmChange = this._handleFilmChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
@@ -34,12 +30,6 @@ export default class Board {
     this._sourcedBoardFilms = boardFilms.slice();
 
     this._renderBoard();
-  }
-
-  _handleFilmChange(updatedFilm) {
-    this._boardFilms = updateItem(this._boardFilms, updatedFilm);
-    this._sourcedBoardFilms = updateItem(this._sourcedBoardFilms, updatedFilm);
-    this._filmPresenter[updatedFilm.film.id].init(updatedFilm);
   }
 
   _sortFilms(sortType) {
@@ -78,70 +68,12 @@ export default class Board {
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
-  _renderFilm(filmsContainer, popupContainer, film) {
-    const filmPresenter = new FilmPresenter(filmsContainer, popupContainer, this._handleFilmChange);
-    filmPresenter.init(film);
-    this._filmPresenter[film.film.id] = filmPresenter;
-  }
-
-  _renderFilms(from, to, filmsListContainer) {
-    this._boardFilms
-      .slice(from, to)
-      .forEach((boardFilm) => this._renderFilm(filmsListContainer, this._popupContainer, boardFilm));
-  }
-
   _renderNoFilms() {
-    render(this._filmsListComponent, this._noFilmsComponent, RenderPosition.AFTERBEGIN);
+    render(this._boardContainer, this._noFilmsComponent, RenderPosition.BEFOREEND);
   }
-
-  _renderShowMoreButton() {
-    let renderedFilmCount = this._renderedFilmCount;
-
-    render(this._filmsListComponent, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
-
-    this._showMoreButtonComponent.setClickHandler(() => {
-      this._boardFilms
-        .slice(renderedFilmCount, renderedFilmCount + this._renderedFilmCount)
-        .forEach((el) => this._renderFilm(this._filmsMainListContainer, this._popupContainer, el));
-
-      renderedFilmCount += this._renderedFilmCount;
-
-      if (renderedFilmCount >= this._boardFilms.length) {
-        remove(this._showMoreButtonComponent);
-      }
-    });
-  }
-
-  _renderFilmsList() {
-    render(this._filmsContainerComponent, this._filmsListComponent, RenderPosition.BEFOREEND);
-
-    this._popupContainer = document.querySelector('body');
-    this._filmsMainListContainer = this._filmsContainerComponent.getElement().querySelector('.films-list__container');
-
-    this._renderFilms(0, Math.min(this._boardFilms.length, this._renderedFilmCount), this._filmsMainListContainer);
-
-    if (this._boardFilms.length > this._renderedFilmCount) {
-      this._renderShowMoreButton();
-    }
-  }
-
-  // _renderFilmsExtraList() {
-  //   render(this._filmsContainerComponent, new FilmsListExtraView('Top rated').getElement(), RenderPosition.BEFOREEND);
-  //   render(this._filmsContainerComponent, new FilmsListExtraView('Most commented').getElement(), RenderPosition.BEFOREEND);
-
-  //   const siteFilmsExtraListContainersElement = this._filmsContainerComponent.getElement().querySelectorAll('.films-list--extra');
-  //   siteFilmsExtraListContainersElement.forEach((list, index) => {
-  //     const container = list.querySelector('.films-list__container');
-  //     for (let i = 0; i < FILMS_EXTRA_COUNT; i++) {
-  //       this._renderFilm(container, this._popupContainer, this._boardFilms[index * FILMS_EXTRA_COUNT + i]);
-  //     }
-  //   });
-  // }
 
   _renderBoard() {
     if (this._boardFilms.length === 0) {
-      render(this.__boardContainer, this._filmsContainerComponent, RenderPosition.BEFOREEND);
-      render(this._filmsContainerComponent, this._filmsListComponent, RenderPosition.BEFOREEND);
       this._renderNoFilms();
       return;
     }
@@ -149,16 +81,23 @@ export default class Board {
     this._renderSort();
     render(this._boardContainer, this._filmsContainerComponent, RenderPosition.BEFOREEND);
 
-    this._renderFilmsList();
-    //this._renderFilmsExtraList();
+    const mainListTitle = 'All movies. Upcoming';
+    this._mainListPresenter = new FilmListPresenter(this._filmsContainerComponent, this._popupContainer, mainListTitle);
+    this._mainListPresenter.init(this._boardFilms);
+
+    const topRatedListTitle = 'Top rated';
+    this._topRatedListPresenter = new FilmListPresenter(this._filmsContainerComponent, this._popupContainer, topRatedListTitle, true);
+    this._topRatedListPresenter.init(this._boardFilms);
+
+    const topCommentedListTitle = 'Top commented';
+    this._topCommentedListPresenter = new FilmListPresenter(this._filmsContainerComponent, this._popupContainer, topCommentedListTitle, true);
+    this._topCommentedListPresenter.init(this._boardFilms);
   }
 
   _clearBoard() {
-    Object
-      .values(this._filmPresenter)
-      .forEach((presenter) => presenter.destroy());
-    this._filmPresenter = {};
-    this._renderedFilmCount = FILMS_COUNT_PER_STEP;
+    this._mainListPresenter.destroy();
+    this._topRatedListPresenter.destroy();
+    this._topCommentedListPresenter.destroy();
     remove(this._showMoreButtonComponent);
     remove(this._sortComponent);
   }

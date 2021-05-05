@@ -22,17 +22,18 @@ export default class Film {
 
   init(film) {
     this._film = film;
-    //console.log(this._film.film.isFavorite);
 
     const prevFilmCardComponent = this._filmCardComponent;
     const prevFilmPopupComponent = this._filmPopupComponent;
 
     this._filmCardComponent = new FilmCardView(this._film);
-    //console.log(this._filmCardComponent.getElement());
     this._filmPopupComponent = new FilmPopupView(this._film);
 
-    this._filmCardComponent.setOpenPopupClickHandler(this._handleOpenPopupClick);
     this._filmPopupComponent.setClosePopupClickHandler(this._handleClosePopupClick);
+    this._filmPopupComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._filmPopupComponent.setWatchListClickHandler(this._handleWatchListClick);
+    this._filmPopupComponent.setWatchedClickHandler(this._handleWatchedClick);
+    this._filmCardComponent.setOpenPopupClickHandler(this._handleOpenPopupClick);
     this._filmCardComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._filmCardComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._filmCardComponent.setWatchListClickHandler(this._handleWatchListClick);
@@ -42,7 +43,8 @@ export default class Film {
       return;
     }
 
-    if (this._filmContainer.contains(prevFilmCardComponent.getElement())) {
+
+    if (this._filmContainer.getElement().contains(prevFilmCardComponent.getElement())) {
       replace(this._filmCardComponent, prevFilmCardComponent);
     }
 

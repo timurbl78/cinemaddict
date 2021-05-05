@@ -1,8 +1,10 @@
 import AbstractView from './abstract';
 
 export default class FilmsList extends AbstractView {
-  constructor() {
+  constructor(title, isExtra) {
     super();
+    this._title = title;
+    this._isExtra = isExtra;
   }
 
   getTemplate() {
@@ -10,11 +12,17 @@ export default class FilmsList extends AbstractView {
   }
 
   _createFilmsListTemplate() {
-    return `<section class="films-list">
-    <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
+    let extraClass = '';
+    let hideTitleClass = '';
+    if (this._isExtra) {
+      extraClass = 'films-list--extra';
+    } else {
+      hideTitleClass = 'visually-hidden';
+    }
 
-    <div class="films-list__container">
-    </div>
+    return `<section class="films-list ${extraClass}">
+    <h2 class="films-list__title ${hideTitleClass}">${this._title}</h2>
+
     </section>`;
   }
 }
