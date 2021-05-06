@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import {nanoid} from 'nanoid';
 import {getRandomInteger, getRandomArrayItem} from '../utils/common';
 
 const COMMENTS_MIN_NUMBER = 0;
@@ -52,6 +53,7 @@ export const generateComments = () => {
   const comments = [];
   for (let i = 0; i < amount; i++) {
     comments.push({
+      id: nanoid(),
       text: generateText(),
       emoji: generateEmoji(),
       author: generateAuthor(),

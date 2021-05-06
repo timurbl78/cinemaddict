@@ -4,14 +4,14 @@ import NoFilmsView from '../view/no-films';
 import FilmListPresenter from './film-list';
 import { remove, render, RenderPosition } from '../utils/render';
 import {sortDateDown, sortRatingDown} from '../utils/film';
-import {SortType} from '../const.js';
+import {SortType, filmListTitle} from '../const.js';
 
 export default class Board {
   constructor(boardContainer, popupContainer) {
     this._boardContainer = boardContainer;
     this._popupContainer = popupContainer;
 
-    this._filmPresenter = {};
+    this._filmListPresenter = {};
 
     this._mainListPresenter = null;
     this._topRatedListPresenter = null;
@@ -23,6 +23,7 @@ export default class Board {
     this._noFilmsComponent = new NoFilmsView();
 
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+    this._handleFilmListChange = this._handleFilmListChange.bind(this);
   }
 
   init(boardFilms) {
@@ -81,24 +82,34 @@ export default class Board {
     this._renderSort();
     render(this._boardContainer, this._filmsContainerComponent, RenderPosition.BEFOREEND);
 
-    const mainListTitle = 'All movies. Upcoming';
-    this._mainListPresenter = new FilmListPresenter(this._filmsContainerComponent, this._popupContainer, mainListTitle);
+    const mainListTitle = filmListTitle.DEFAULT;
+    this._mainListPresenter = new FilmListPresenter(this._filmsContainerComponent, this._popupContainer, mainListTitle, this._handleFilmListChange);
     this._mainListPresenter.init(this._boardFilms);
+    this._filmListPresenter[mainListTitle] = this._mainListPresenter;
 
-    const topRatedListTitle = 'Top rated';
-    this._topRatedListPresenter = new FilmListPresenter(this._filmsContainerComponent, this._popupContainer, topRatedListTitle, true);
+    const topRatedListTitle = filmListTitle.RATING;
+    this._topRatedListPresenter = new FilmListPresenter(this._filmsContainerComponent, this._popupContainer, topRatedListTitle, this._handleFilmListChange, true);
     this._topRatedListPresenter.init(this._boardFilms);
+    this._filmListPresenter[topRatedListTitle] = this._topRatedListPresenter;
 
-    const topCommentedListTitle = 'Top commented';
-    this._topCommentedListPresenter = new FilmListPresenter(this._filmsContainerComponent, this._popupContainer, topCommentedListTitle, true);
+    const topCommentedListTitle = filmListTitle.COMMENT;
+    this._topCommentedListPresenter = new FilmListPresenter(this._filmsContainerComponent, this._popupContainer, topCommentedListTitle, this._handleFilmListChange, true);
     this._topCommentedListPresenter.init(this._boardFilms);
+    this._filmListPresenter[topCommentedListTitle] = this._topCommentedListPresenter;
+  }
+
+  _handleFilmListChange(listTitle, film) {
+    for (let presenter in this._filmListPresenter) {
+      if (presenter !== listTitle) {
+        this._filmListPresenter[presenter].rerender(film);
+      }
+    }
   }
 
   _clearBoard() {
     this._mainListPresenter.destroy();
     this._topRatedListPresenter.destroy();
     this._topCommentedListPresenter.destroy();
-    remove(this._showMoreButtonComponent);
     remove(this._sortComponent);
   }
 }

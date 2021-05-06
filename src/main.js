@@ -31,4 +31,3 @@ render(footerStatistics, new FooterStatisticsView(data.length).getElement(), Ren
 
 const boardPresenter = new BoardPresenter(siteMainElement, siteBodyElement);
 boardPresenter.init(data);
-
