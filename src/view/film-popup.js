@@ -198,4 +198,11 @@ export default class FilmPopup extends SmartView {
     this._callback.watchListClick = callback;
     this.getElement().querySelector('#watchlist').addEventListener('click', this._watchListClickHandler);
   }
+
+  restoreHandlers() {
+    this.setClosePopupClickHandler(this._callback.closePopupClick);
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
+    this.setWatchedClickHandler(this._callback.watchedClick);
+    this.setWatchListClickHandler(this._callback.watchListClick);
+  }
 }

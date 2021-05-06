@@ -3,12 +3,19 @@ import FilmPopupView from '../view/film-popup';
 
 import {render, RenderPosition, replace, remove} from '../utils/render';
 
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  POPUP: 'POPUP',
+};
+
 export default class Film {
-  constructor(filmContainer, filmPopupContainer, changeData) {
+  constructor(filmContainer, filmPopupContainer, changeData, changeMode) {
     this._filmContainer = filmContainer;
     this._filmPopupContainer = filmPopupContainer;
     this._changeData = changeData;
+    this._changeMode = changeMode;
 
+    this._mode = Mode.DEFAULT;
     this._filmCardComponent = null;
     this._filmPopupComponent = null;
 
@@ -48,7 +55,7 @@ export default class Film {
       replace(this._filmCardComponent, prevFilmCardComponent);
     }
 
-    if (this._filmPopupContainer.contains(prevFilmPopupComponent.getElement())) {
+    if (this._mode == Mode.POPUP) {
       replace(this._filmPopupComponent, prevFilmPopupComponent);
     }
 
@@ -63,10 +70,13 @@ export default class Film {
 
   _openPopup() {
     this._filmPopupContainer.appendChild(this._filmPopupComponent.getElement());
+    this._changeMode();
+    this._mode = Mode.POPUP;
   }
 
   _closePopup() {
     this._filmPopupContainer.removeChild(this._filmPopupComponent.getElement());
+    this._mode = Mode.DEFAULT;
   }
 
   _onEscKeyDownHandler(evt) {
@@ -145,5 +155,11 @@ export default class Film {
         },
       ),
     );
+  }
+
+  resetView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._closePopup();
+    }
   }
 }

@@ -25,6 +25,7 @@ export default class FilmList {
     this._showMoreButtonComponent = new ShowMoreButtonView();
 
     this._handleFilmChange = this._handleFilmChange.bind(this);
+    this._handleModeChange = this._handleModeChange.bind(this);
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
   }
 
@@ -55,7 +56,7 @@ export default class FilmList {
   }
 
   _renderFilm(film) {
-    const filmPresenter = new FilmPresenter(this._filmsListContainerComponent, this._filmsPopupContainer, this._handleFilmChange);
+    const filmPresenter = new FilmPresenter(this._filmsListContainerComponent, this._filmsPopupContainer, this._handleFilmChange, this._handleModeChange);
     filmPresenter.init(film);
     this._filmPresenter[film.film.id] = filmPresenter;
   }
@@ -90,5 +91,12 @@ export default class FilmList {
     if (this._renderedFilmCount >= this._films.length) {
       remove(this._showMoreButtonComponent);
     }
+  }
+
+  _handleModeChange() {
+    console.log(this._filmPresenter);
+    Object
+      .values(this._filmPresenter)
+      .forEach((presenter) => presenter.resetView());
   }
 }
