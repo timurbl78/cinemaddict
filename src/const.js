@@ -12,4 +12,15 @@ export const filmListTitle = {
   DEFAULT: 'All movies. Upcoming',
   COMMENT: 'Top commented',
   RATING: 'Top rated',
-}
+};
+
+export const UserAction = {
+  UPDATE_FILM: 'UPDATE_FILM',
+  ADD_COMMENT: 'ADD_COMMENT',
+  DELETE_COMMENT: 'DELETE_COMMENT',
+};
+
+export const UpdateType = {
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};

@@ -17,6 +17,7 @@ export default class FilmPopup extends SmartView {
     this._chooseEmojiClickHandler = this._chooseEmojiClickHandler.bind(this);
     this._commentInputHandler = this._commentInputHandler.bind(this);
     this._sendCommentHandler = this._sendCommentHandler.bind(this);
+    this._deleteClickHandler = this._deleteClickHandler.bind(this);
 
     this._setInnerHandlers();
   }
@@ -127,7 +128,7 @@ export default class FilmPopup extends SmartView {
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${comment.author}</span>
             <span class="film-details__comment-day">${dayjs(comment.date).format('YYYY/MM/DD HH:mm')}</span>
-            <button class="film-details__comment-delete">Delete</button>
+            <button class="film-details__comment-delete" data-id="${comment.id}">Delete</button>
           </p>
         </div>
       </li>`).join('')}
@@ -215,6 +216,16 @@ export default class FilmPopup extends SmartView {
     }
   }
 
+  _deleteClickHandler(evt) {
+    evt.preventDefault();
+
+    if (evt.target.tagName === 'BUTTON') {
+      this._data.comments = this._data.comments.filter((value) => value.id !== evt.target.dataset.id);
+      this.updateElement();
+      this._callback.deleteComment(this._data);
+    }
+  }
+
   setClosePopupClickHandler(callback) {
     this._callback.closePopupClick = callback;
     this.getElement().querySelector('.film-details__close-btn').addEventListener('click', this._closePopupClickHandler);
@@ -239,10 +250,17 @@ export default class FilmPopup extends SmartView {
     this._callback.addComment = callback;
   }
 
+  setDeleteCommentHandler(callback) {
+    this._callback.deleteComment = callback;
+  }
+
   _setInnerHandlers() {
     this.getElement().querySelector('.film-details__emoji-list').addEventListener('change', this._chooseEmojiClickHandler);
     this.getElement().querySelector('.film-details__comment-input').addEventListener('input', this._commentInputHandler);
     this.getElement().addEventListener('keydown', this._sendCommentHandler);
+    this.getElement().querySelectorAll('.film-details__comment').forEach((el) => {
+      el.addEventListener('click', this._deleteClickHandler);
+    });
   }
 
   restoreHandlers() {

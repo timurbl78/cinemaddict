@@ -25,6 +25,7 @@ export default class Film {
     this._handleOpenPopupClick = this._handleOpenPopupClick.bind(this);
     this._handleClosePopupClick = this._handleClosePopupClick.bind(this);
     this._handleAddComment = this._handleAddComment.bind(this);
+    this._handleDeleteComment = this._handleDeleteComment.bind(this);
     this._onEscKeyDownHandler = this._onEscKeyDownHandler.bind(this);
   }
 
@@ -46,6 +47,8 @@ export default class Film {
     this._filmCardComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._filmCardComponent.setWatchListClickHandler(this._handleWatchListClick);
     this._filmPopupComponent.setAddCommentHandler(this._handleAddComment);
+    this._filmPopupComponent.setDeleteCommentHandler(this._handleDeleteComment);
+
 
     if (prevFilmCardComponent === null || prevFilmPopupComponent === null) {
       render(this._filmContainer, this._filmCardComponent, RenderPosition.BEFOREEND);
@@ -56,7 +59,7 @@ export default class Film {
       replace(this._filmCardComponent, prevFilmCardComponent);
     }
 
-    if (this._mode == Mode.POPUP) {
+    if (this._mode === Mode.POPUP) {
       replace(this._filmPopupComponent, prevFilmPopupComponent);
     }
 
@@ -65,6 +68,7 @@ export default class Film {
   }
 
   destroy() {
+    document.removeEventListener('keydown', this._onEscKeyDownHandler);
     remove(this._filmCardComponent);
     remove(this._filmPopupComponent);
   }
@@ -78,12 +82,19 @@ export default class Film {
   _closePopup() {
     this._filmPopupContainer.removeChild(this._filmPopupComponent.getElement());
     this._mode = Mode.DEFAULT;
+    this._changeData(
+      Object.assign(
+        {},
+        this._film,
+      ), true,
+    );
   }
 
   _onEscKeyDownHandler(evt) {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this._closePopup();
+      this._changeMode();
       document.removeEventListener('keydown', this._onEscKeyDownHandler);
     }
   }
@@ -95,6 +106,7 @@ export default class Film {
 
   _handleClosePopupClick() {
     this._closePopup();
+    this._changeMode();
     document.removeEventListener('keydown', this._onEscKeyDownHandler);
   }
 
@@ -159,6 +171,20 @@ export default class Film {
   }
 
   _handleAddComment(data) {
+    const comments = [...data.comments];
+
+    this._changeData(
+      Object.assign(
+        {},
+        this._film,
+        {
+          comments: comments,
+        },
+      ),
+    );
+  }
+
+  _handleDeleteComment(data) {
     const comments = [...data.comments];
 
     this._changeData(

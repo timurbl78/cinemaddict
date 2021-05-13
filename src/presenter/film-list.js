@@ -3,7 +3,6 @@ import FilmsListContainerView from '../view/films-list-container';
 import ShowMoreButtonView from '../view/show-more-button';
 import FilmPresenter from './film';
 import { remove, render, RenderPosition } from '../utils/render';
-import {updateItem} from '../utils/common';
 import {sortCommentDown, sortRatingDown} from '../utils/film';
 import {filmListTitle} from '../const.js';
 
@@ -50,16 +49,6 @@ export default class FilmList {
     this._renderFilmList();
   }
 
-  rerender(film) {
-    const newData = this._films.map((value) => {
-      if (value.film.id !== film.film.id) {
-        return value;
-      }
-      return film;
-    });
-    this.init(newData);
-  }
-
   destroy() {
     this._clearFilmList();
     remove(this._filmsListComponent);
@@ -74,17 +63,19 @@ export default class FilmList {
     remove(this._showMoreButtonComponent);
   }
 
-  _handleFilmChange(updatedFilm) {
-    this._films = updateItem(this._films, updatedFilm);
-    //this._sourcedBoardFilms = updateItem(this._sourcedBoardFilms, updatedFilm);
-    this._filmPresenter[updatedFilm.film.id].init(updatedFilm);
+  _handleFilmChange(updatedFilm, isReloadNeeded = false) {
+    this._filmPresenter[updatedFilm.id].init(updatedFilm);
     this._changeData(this._listTitle, updatedFilm);
+
+    if (this._listTitle === filmListTitle.COMMENT && isReloadNeeded === true) {
+      this.init(this._films);
+    }
   }
 
   _renderFilm(film) {
     const filmPresenter = new FilmPresenter(this._filmsListContainerComponent, this._filmsPopupContainer, this._handleFilmChange, this._handleModeChange);
     filmPresenter.init(film);
-    this._filmPresenter[film.film.id] = filmPresenter;
+    this._filmPresenter[film.id] = filmPresenter;
   }
 
   _renderFilms(from, to) {
@@ -107,9 +98,9 @@ export default class FilmList {
     }
     render(this._filmsListComponent, this._filmsListContainerComponent, RenderPosition.BEFOREEND);
 
-    this._renderFilms(0, Math.min(this._films.length, this._filmsCountToShow));
+    this._renderFilms(0, Math.min(this._films.length, this._renderedFilmCount));
 
-    if (!this._isExtra && this._films.length > FILM_COUNT_PER_STEP) {
+    if (!this._isExtra && this._films.length > this._renderedFilmCount) {
       this._renderShowMoreButtton();
     }
   }
