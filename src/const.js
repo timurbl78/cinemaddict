@@ -8,7 +8,7 @@ export const KeyCodes = {
   ENTER: 13,
 };
 
-export const filmListTitle = {
+export const FilmListTitle = {
   DEFAULT: 'All movies. Upcoming',
   COMMENT: 'Top commented',
   RATING: 'Top rated',
@@ -23,4 +23,11 @@ export const UserAction = {
 export const UpdateType = {
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+};
+
+export const FilterType = {
+  ALL: 'all',
+  WATCHLIST: 'watchlist',
+  HISTORY: 'history',
+  FAVORITES: 'favorites',
 };

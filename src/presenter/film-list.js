@@ -4,7 +4,7 @@ import ShowMoreButtonView from '../view/show-more-button';
 import FilmPresenter from './film';
 import { remove, render, RenderPosition } from '../utils/render';
 import {sortCommentDown, sortRatingDown} from '../utils/film';
-import {filmListTitle} from '../const.js';
+import {FilmListTitle} from '../const.js';
 
 const FILM_COUNT_PER_STEP = 5;
 const FILM_LIST_EXTRA_COUNT = 2;
@@ -36,10 +36,10 @@ export default class FilmList {
     this._films = films.slice();
     if (this._isExtra) {
       switch (this._listTitle) {
-        case filmListTitle.RATING:
+        case FilmListTitle.RATING:
           this._films.sort(sortRatingDown);
           break;
-        case filmListTitle.COMMENT:
+        case FilmListTitle.COMMENT:
           this._films.sort(sortCommentDown);
           break;
         default:
@@ -67,7 +67,7 @@ export default class FilmList {
     this._filmPresenter[updatedFilm.id].init(updatedFilm);
     this._changeData(this._listTitle, updatedFilm);
 
-    if (this._listTitle === filmListTitle.COMMENT && isReloadNeeded === true) {
+    if (this._listTitle === FilmListTitle.COMMENT && isReloadNeeded === true) {
       this.init(this._films);
     }
   }

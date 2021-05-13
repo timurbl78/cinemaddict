@@ -4,13 +4,15 @@ import NoFilmsView from '../view/no-films';
 import FilmListPresenter from './film-list';
 import { remove, render, RenderPosition } from '../utils/render';
 import {sortDateDown, sortRatingDown} from '../utils/film';
-import {SortType, filmListTitle} from '../const.js';
+import {filter} from '../utils/filter.js';
+import {SortType, FilmListTitle} from '../const.js';
 
 export default class Board {
-  constructor(boardContainer, popupContainer, moviesModel) {
+  constructor(boardContainer, popupContainer, moviesModel, filterModel) {
     this._boardContainer = boardContainer;
     this._popupContainer = popupContainer;
     this._moviesModel = moviesModel;
+    this._filterModel = filterModel;
 
     this._filmListPresenter = {};
 
@@ -26,21 +28,32 @@ export default class Board {
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleFilmListChange = this._handleFilmListChange.bind(this);
+
+    this._moviesModel.addObserver(this._handleFilmListChange);
+    this._filterModel.addObserver(this._handleFilmListChange);
   }
 
   init() {
-    this._moviesModel.addObserver(this._handleFilmListChange);
+    // this._moviesModel.addObserver(this._handleFilmListChange);
+    // this._filterModel.addObserver(this._handleFilmListChange);
     this._renderBoard();
   }
 
-  _getMovies(sortType) {
+  _getMovies(sortType, isMainList = false) {
+    let movies = this._moviesModel.getMovies();
+
+    if (isMainList) {
+      const filterType = this._filterModel.getFilter();
+      movies = filter[filterType](movies);
+    }
+
     switch (sortType) {
       case SortType.RATING:
-        return this._moviesModel.getMovies().slice().sort(sortRatingDown);
+        return movies.sort(sortRatingDown);
       case SortType.DATE:
-        return this._moviesModel.getMovies().slice().sort(sortDateDown);
+        return movies.sort(sortDateDown);
       default:
-        return this._moviesModel.getMovies().slice();
+        return movies;
     }
   }
 
@@ -78,17 +91,17 @@ export default class Board {
     this._renderSort();
     render(this._boardContainer, this._filmsContainerComponent, RenderPosition.BEFOREEND);
 
-    const mainListTitle = filmListTitle.DEFAULT;
+    const mainListTitle = FilmListTitle.DEFAULT;
     this._mainListPresenter = new FilmListPresenter(this._filmsContainerComponent, this._popupContainer, mainListTitle, this._handleViewAction);
-    this._mainListPresenter.init(this._getMovies(this._currentSortType));
+    this._mainListPresenter.init(this._getMovies(this._currentSortType, true));
     this._filmListPresenter[mainListTitle] = this._mainListPresenter;
 
-    const topRatedListTitle = filmListTitle.RATING;
+    const topRatedListTitle = FilmListTitle.RATING;
     this._topRatedListPresenter = new FilmListPresenter(this._filmsContainerComponent, this._popupContainer, topRatedListTitle, this._handleViewAction, true);
     this._topRatedListPresenter.init(this._getMovies(this._currentSortType));
     this._filmListPresenter[topRatedListTitle] = this._topRatedListPresenter;
 
-    const topCommentedListTitle = filmListTitle.COMMENT;
+    const topCommentedListTitle = FilmListTitle.COMMENT;
     this._topCommentedListPresenter = new FilmListPresenter(this._filmsContainerComponent, this._popupContainer, topCommentedListTitle, this._handleViewAction, true);
     this._topCommentedListPresenter.init(this._getMovies(this._currentSortType));
     this._filmListPresenter[topCommentedListTitle] = this._topCommentedListPresenter;
@@ -101,7 +114,7 @@ export default class Board {
   _handleFilmListChange(listTitle) {
     for (const presenter in this._filmListPresenter) {
       if (presenter !== listTitle) {
-        this._filmListPresenter[presenter].init(this._getMovies(this._currentSortType));
+        this._filmListPresenter[presenter].init(this._getMovies(this._currentSortType, presenter === FilmListTitle.DEFAULT));
       }
     }
   }
