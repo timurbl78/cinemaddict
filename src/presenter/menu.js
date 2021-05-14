@@ -1,18 +1,22 @@
 import MenuView from '../view/menu';
+import StatisticsView from '../view/statistics';
 import {render, RenderPosition, replace, remove} from '../utils/render.js';
 import {filter} from '../utils/filter.js';
-import {FilterType} from '../const.js';
+import {FilterType, MenuItem} from '../const.js';
 
 export default class Menu {
-  constructor(menuContainer, filterModel, moviesModel) {
+  constructor(menuContainer, filterModel, moviesModel, boardPresenter) {
     this._menuContainer = menuContainer;
     this._filterModel = filterModel;
     this._moviesModel = moviesModel;
+    this._boardPresenter = boardPresenter;
 
     this._menuCompoment = null;
+    this._statisticsComponent = null;
 
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleFilterTypeChange = this._handleFilterTypeChange.bind(this);
+    this._handleSiteMenuClick = this._handleSiteMenuClick.bind(this);
 
     this._moviesModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
@@ -24,6 +28,7 @@ export default class Menu {
 
     this._menuCompoment = new MenuView(filters, this._filterModel.getFilter());
     this._menuCompoment.setFilterTypeChangeHandler(this._handleFilterTypeChange);
+    this._menuCompoment.setMenuClickHandler(this._handleSiteMenuClick);
 
     if (prevMenuComponent === null) {
       render(this._menuContainer, this._menuCompoment, RenderPosition.BEFOREEND);
@@ -72,5 +77,19 @@ export default class Menu {
         count: filter[FilterType.FAVORITES](movies).length,
       },
     ];
+  }
+
+  _handleSiteMenuClick(menuItem) {
+    switch (menuItem) {
+      case MenuItem.MOVIES:
+        remove(this._statisticsComponent);
+        this._boardPresenter.init();
+        break;
+      case MenuItem.STATISTICS:
+        this._boardPresenter.destroy();
+        this._statisticsComponent = new StatisticsView(this._moviesModel.getMovies());
+        render(this._menuContainer, this._statisticsComponent, RenderPosition.BEFOREEND);
+        break;
+    }
   }
 }

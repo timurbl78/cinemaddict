@@ -28,19 +28,16 @@ export default class Board {
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleFilmListChange = this._handleFilmListChange.bind(this);
-
-    this._moviesModel.addObserver(this._handleFilmListChange);
-    this._filterModel.addObserver(this._handleFilmListChange);
   }
 
   init() {
-    // this._moviesModel.addObserver(this._handleFilmListChange);
-    // this._filterModel.addObserver(this._handleFilmListChange);
+    this._moviesModel.addObserver(this._handleFilmListChange);
+    this._filterModel.addObserver(this._handleFilmListChange);
     this._renderBoard();
   }
 
   _getMovies(sortType, isMainList = false) {
-    let movies = this._moviesModel.getMovies();
+    let movies = this._moviesModel.getMovies().slice();
 
     if (isMainList) {
       const filterType = this._filterModel.getFilter();
@@ -62,7 +59,6 @@ export default class Board {
       return;
     }
 
-    this._currentSortType = sortType;
     this._currentSortType = sortType;
     this._clearBoard();
     this._renderBoard();
@@ -117,6 +113,15 @@ export default class Board {
         this._filmListPresenter[presenter].init(this._getMovies(this._currentSortType, presenter === FilmListTitle.DEFAULT));
       }
     }
+  }
+
+  destroy() {
+    this._clearBoard();
+
+    remove(this._filmsContainerComponent);
+
+    this._moviesModel.removeObserver(this._handleFilmListChange);
+    this._filterModel.removeObserver(this._handleFilmListChange);
   }
 
   _clearBoard() {
