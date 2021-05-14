@@ -59,3 +59,27 @@ export const sortRatingDown = (filmA, filmB) => {
 export const sortCommentDown = (filmA, filmB) => {
   return filmB.comments.length - filmA.comments.length;
 };
+
+export const isToday = (film) => {
+  const filmDate = dayjs(film.film.date);
+  const now = dayjs();
+  return filmDate.diff(now, 'day') === 0;
+};
+
+export const isWeek = (film) => {
+  const filmDate = dayjs(film.film.date);
+  const now = dayjs();
+  return now.diff(filmDate, 'day') <= 7;
+};
+
+export const isMonth = (film) => {
+  const filmDate = dayjs(film.film.date);
+  const now = dayjs();
+  return now.diff(filmDate, 'day') <= 28;
+};
+
+export const isYear = (film) => {
+  const filmDate = dayjs(film.film.date);
+  const now = dayjs();
+  return now.diff(filmDate, 'day') <= 365;
+};

@@ -1,4 +1,5 @@
-import { KeyCodes } from "../const";
+import { StatisticType } from '../const';
+import { isToday, isWeek, isMonth, isYear } from './film';
 
 export const getMyMoviesByGenre = (data) => {
   const genres = getGenres(data);
@@ -24,9 +25,11 @@ export const getGenres = (data) => {
   data.forEach((element) => {
     const film = element.film;
 
-    film.genres.forEach((genre) => {
-      genres.add(genre);
-    });
+    if (film.isWatched) {
+      film.genres.forEach((genre) => {
+        genres.add(genre);
+      });
+    }
   });
 
   return genres;
@@ -59,4 +62,12 @@ export const getTotalDuration = (data) => {
   });
 
   return duration;
+};
+
+export const filter = {
+  [StatisticType.ALL]: (data) => data,
+  [StatisticType.TODAY]: (data) => data.filter((el) => isToday(el)),
+  [StatisticType.WEEK]: (data) => data.filter((el) => isWeek(el)),
+  [StatisticType.MONTH]: (data) => data.filter((el) => isMonth(el)),
+  [StatisticType.YEAR]: (data) => data.filter((el) => isYear(el)),
 };

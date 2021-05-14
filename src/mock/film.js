@@ -9,7 +9,7 @@ import {generateRandomDate} from '../utils/film';
 
 const FILM_GENRES_MIN = 1;
 const FILM_GENRES_MAX = 2;
-const FILM_RELEASE_MIN = 1970;
+const FILM_RELEASE_MIN = 2019;
 const FILM_RELEASE_MAX = 2021;
 const FILM_RATING_MIN = 4.0;
 const FILM_RATING_MAX = 10.0;

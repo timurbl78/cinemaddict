@@ -1,6 +1,4 @@
 import ProfileView from './view/profile';
-import MenuView from './view/menu';
-import StatisticsView from './view/statistics';
 import FooterStatisticsView from './view/footer-statistics';
 
 import BoardPresenter from './presenter/board';
@@ -10,10 +8,8 @@ import FilterModel from './model/filter';
 
 import {generateFilm} from './mock/film';
 import {generateComments} from './mock/comments';
-import { MenuItem } from './const';
-//import {generateFilter} from './mock/filter';
 
-import {remove, render, RenderPosition} from './utils/render';
+import { render, RenderPosition } from './utils/render';
 import { nanoid } from 'nanoid';
 
 
@@ -24,13 +20,6 @@ const data = new Array(FILMS_COUNT).fill(null).map(() => ({
   film: generateFilm(),
   comments: generateComments(),
 }));
-const filters = [
-  {
-    type: 'all',
-    name: 'All movies',
-    count: 0,
-  },
-];
 
 const moviesModel = new MoviesModel();
 moviesModel.setMovies(data);
@@ -40,7 +29,7 @@ const siteBodyElement = document.querySelector('body');
 const siteHeaderElement = siteBodyElement.querySelector('.header');
 const siteMainElement = siteBodyElement.querySelector('.main');
 
-render(siteHeaderElement, new ProfileView(filters).getElement(), RenderPosition.BEFOREEND);
+render(siteHeaderElement, new ProfileView(moviesModel).getElement(), RenderPosition.BEFOREEND);
 const footerStatistics = siteBodyElement.querySelector('.footer__statistics');
 render(footerStatistics, new FooterStatisticsView(data.length).getElement(), RenderPosition.BEFOREEND);
 
