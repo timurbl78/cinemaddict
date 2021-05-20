@@ -26,29 +26,7 @@ export const getStatus = (amount) => {
   return 'Movie Buff';
 };
 
-const getWeightForNullDate = (dateA, dateB) => {
-  if (dateA === null && dateB === null) {
-    return 0;
-  }
-
-  if (dateA === null) {
-    return 1;
-  }
-
-  if (dateB === null) {
-    return -1;
-  }
-
-  return null;
-};
-
 export const sortDateDown = (filmA, filmB) => {
-  const weight = getWeightForNullDate(filmA.film.date, filmB.film.date);
-
-  if (weight !== null) {
-    return weight;
-  }
-
   return dayjs(filmB.film.date).diff(dayjs(filmA.film.date));
 };
 
@@ -60,26 +38,26 @@ export const sortCommentDown = (filmA, filmB) => {
   return filmB.comments.length - filmA.comments.length;
 };
 
-export const isToday = (film) => {
-  const filmDate = dayjs(film.film.date);
+export const isWatchedToday = (film) => {
+  const filmDate = dayjs(film.film.watchingDate);
   const now = dayjs();
   return filmDate.diff(now, 'day') === 0;
 };
 
-export const isWeek = (film) => {
-  const filmDate = dayjs(film.film.date);
+export const isWatchedWeek = (film) => {
+  const filmDate = dayjs(film.film.watchingDate);
   const now = dayjs();
   return now.diff(filmDate, 'day') <= 7;
 };
 
-export const isMonth = (film) => {
-  const filmDate = dayjs(film.film.date);
+export const isWatchedMonth = (film) => {
+  const filmDate = dayjs(film.film.watchingDate);
   const now = dayjs();
   return now.diff(filmDate, 'day') <= 28;
 };
 
-export const isYear = (film) => {
-  const filmDate = dayjs(film.film.date);
+export const isWatchedYear = (film) => {
+  const filmDate = dayjs(film.film.watchingDate);
   const now = dayjs();
   return now.diff(filmDate, 'day') <= 365;
 };

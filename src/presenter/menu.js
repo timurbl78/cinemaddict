@@ -48,7 +48,6 @@ export default class Menu {
       return;
     }
 
-    // TODO: dfgfdg
     this._filterModel.setFilter('', filterType);
   }
 

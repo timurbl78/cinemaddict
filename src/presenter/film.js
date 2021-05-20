@@ -1,6 +1,7 @@
 import FilmCardView from '../view/film-card';
 import FilmPopupView from '../view/film-popup';
 
+import {UserAction} from '../const';
 import {render, RenderPosition, replace, remove} from '../utils/render';
 
 const Mode = {
@@ -9,11 +10,12 @@ const Mode = {
 };
 
 export default class Film {
-  constructor(filmContainer, filmPopupContainer, changeData, changeMode) {
+  constructor(filmContainer, filmPopupContainer, changeData, changeMode, api) {
     this._filmContainer = filmContainer;
     this._filmPopupContainer = filmPopupContainer;
     this._changeData = changeData;
     this._changeMode = changeMode;
+    this._api = api;
 
     this._mode = Mode.DEFAULT;
     this._filmCardComponent = null;
@@ -36,19 +38,26 @@ export default class Film {
     const prevFilmPopupComponent = this._filmPopupComponent;
 
     this._filmCardComponent = new FilmCardView(this._film);
-    this._filmPopupComponent = new FilmPopupView(this._film);
-
-    this._filmPopupComponent.setClosePopupClickHandler(this._handleClosePopupClick);
-    this._filmPopupComponent.setFavoriteClickHandler(this._handleFavoriteClick);
-    this._filmPopupComponent.setWatchListClickHandler(this._handleWatchListClick);
-    this._filmPopupComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._filmCardComponent.setOpenPopupClickHandler(this._handleOpenPopupClick);
     this._filmCardComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._filmCardComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._filmCardComponent.setWatchListClickHandler(this._handleWatchListClick);
-    this._filmPopupComponent.setAddCommentHandler(this._handleAddComment);
-    this._filmPopupComponent.setDeleteCommentHandler(this._handleDeleteComment);
 
+
+    this._api.getComments(film.id)
+      .then((comments) => {
+        this._filmPopupComponent = new FilmPopupView(this._film, comments);
+        this._filmPopupComponent.setClosePopupClickHandler(this._handleClosePopupClick);
+        this._filmPopupComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+        this._filmPopupComponent.setWatchListClickHandler(this._handleWatchListClick);
+        this._filmPopupComponent.setWatchedClickHandler(this._handleWatchedClick);
+        this._filmPopupComponent.setAddCommentHandler(this._handleAddComment);
+        this._filmPopupComponent.setDeleteCommentHandler(this._handleDeleteComment);
+
+        if (this._mode === Mode.POPUP) {
+          replace(this._filmPopupComponent, prevFilmPopupComponent);
+        }
+      });
 
     if (prevFilmCardComponent === null || prevFilmPopupComponent === null) {
       render(this._filmContainer, this._filmCardComponent, RenderPosition.BEFOREEND);
@@ -59,10 +68,6 @@ export default class Film {
       replace(this._filmCardComponent, prevFilmCardComponent);
     }
 
-    if (this._mode === Mode.POPUP) {
-      replace(this._filmPopupComponent, prevFilmPopupComponent);
-    }
-
     remove(prevFilmCardComponent);
     remove(prevFilmPopupComponent);
   }
@@ -70,7 +75,9 @@ export default class Film {
   destroy() {
     document.removeEventListener('keydown', this._onEscKeyDownHandler);
     remove(this._filmCardComponent);
-    remove(this._filmPopupComponent);
+    if (this._filmPopupComponent !== null) {
+      remove(this._filmPopupComponent);
+    }
   }
 
   _openPopup() {
@@ -83,6 +90,7 @@ export default class Film {
     this._filmPopupContainer.removeChild(this._filmPopupComponent.getElement());
     this._mode = Mode.DEFAULT;
     this._changeData(
+      UserAction.UPDATE_FILM,
       Object.assign(
         {},
         this._film,
@@ -120,6 +128,7 @@ export default class Film {
     );
 
     this._changeData(
+      UserAction.UPDATE_FILM,
       Object.assign(
         {},
         this._film,
@@ -135,11 +144,13 @@ export default class Film {
       {},
       this._film.film,
       {
+        watchingDate: this._film.film.isWatched ? null : new Date(),
         isWatched: !this._film.film.isWatched,
       },
     );
 
     this._changeData(
+      UserAction.UPDATE_FILM,
       Object.assign(
         {},
         this._film,
@@ -160,6 +171,7 @@ export default class Film {
     );
 
     this._changeData(
+      UserAction.UPDATE_FILM,
       Object.assign(
         {},
         this._film,
@@ -170,24 +182,24 @@ export default class Film {
     );
   }
 
-  _handleAddComment(data) {
-    const comments = [...data.comments];
-
+  _handleAddComment(data, newComment) {
     this._changeData(
+      UserAction.ADD_COMMENT,
       Object.assign(
         {},
         this._film,
-        {
-          comments: comments,
-        },
+        data,
       ),
+      false,
+      null,
+      newComment,
     );
   }
 
-  _handleDeleteComment(data) {
+  _handleDeleteComment(data, commentId) {
     const comments = [...data.comments];
-
     this._changeData(
+      UserAction.DELETE_COMMENT,
       Object.assign(
         {},
         this._film,
@@ -195,6 +207,8 @@ export default class Film {
           comments: comments,
         },
       ),
+      false,
+      commentId,
     );
   }
 

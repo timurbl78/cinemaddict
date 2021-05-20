@@ -10,12 +10,13 @@ const FILM_COUNT_PER_STEP = 5;
 const FILM_LIST_EXTRA_COUNT = 2;
 
 export default class FilmList {
-  constructor(filmsContainerComponent, filmsPopupContainer, listTitle, changeData, isExtra = false) {
+  constructor(api, filmsContainerComponent, filmsPopupContainer, listTitle, changeData, isExtra = false) {
     this._filmsContainerComponent = filmsContainerComponent;
     this._filmsPopupContainer = filmsPopupContainer;
     this._listTitle = listTitle;
     this._changeData = changeData;
     this._isExtra = isExtra;
+    this._api = api;
 
     this._filmsCountToShow = (this._isExtra) ? FILM_LIST_EXTRA_COUNT : FILM_COUNT_PER_STEP;
     this._renderedFilmCount = this._filmsCountToShow;
@@ -63,9 +64,9 @@ export default class FilmList {
     remove(this._showMoreButtonComponent);
   }
 
-  _handleFilmChange(updatedFilm, isReloadNeeded = false) {
+  _handleFilmChange(userAction, updatedFilm, isReloadNeeded = false, commentId = null, newComment = null) {
     this._filmPresenter[updatedFilm.id].init(updatedFilm);
-    this._changeData(this._listTitle, updatedFilm);
+    this._changeData(userAction, this._listTitle, updatedFilm, commentId, newComment);
 
     if (this._listTitle === FilmListTitle.COMMENT && isReloadNeeded === true) {
       this.init(this._films);
@@ -73,7 +74,7 @@ export default class FilmList {
   }
 
   _renderFilm(film) {
-    const filmPresenter = new FilmPresenter(this._filmsListContainerComponent, this._filmsPopupContainer, this._handleFilmChange, this._handleModeChange);
+    const filmPresenter = new FilmPresenter(this._filmsListContainerComponent, this._filmsPopupContainer, this._handleFilmChange, this._handleModeChange, this._api);
     filmPresenter.init(film);
     this._filmPresenter[film.id] = filmPresenter;
   }
@@ -81,7 +82,7 @@ export default class FilmList {
   _renderFilms(from, to) {
     this._films
       .slice(from, to)
-      .forEach((film) => this._renderFilm(film));
+      .forEach((film) => {this._renderFilm(film);});
   }
 
   _renderShowMoreButtton() {

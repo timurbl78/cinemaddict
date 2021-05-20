@@ -54,8 +54,8 @@ export const generateComments = () => {
   for (let i = 0; i < amount; i++) {
     comments.push({
       id: nanoid(),
-      text: generateText(),
-      emoji: generateEmoji(),
+      comment: generateText(),
+      emotion: generateEmoji(),
       author: generateAuthor(),
       date:  generateDate(),
     });

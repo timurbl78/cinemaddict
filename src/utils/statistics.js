@@ -1,5 +1,5 @@
 import { StatisticType } from '../const';
-import { isToday, isWeek, isMonth, isYear } from './film';
+import { isWatchedToday, isWatchedWeek, isWatchedMonth, isWatchedYear } from './film';
 
 export const getMyMoviesByGenre = (data) => {
   const genres = getGenres(data);
@@ -66,8 +66,8 @@ export const getTotalDuration = (data) => {
 
 export const filter = {
   [StatisticType.ALL]: (data) => data,
-  [StatisticType.TODAY]: (data) => data.filter((el) => isToday(el)),
-  [StatisticType.WEEK]: (data) => data.filter((el) => isWeek(el)),
-  [StatisticType.MONTH]: (data) => data.filter((el) => isMonth(el)),
-  [StatisticType.YEAR]: (data) => data.filter((el) => isYear(el)),
+  [StatisticType.TODAY]: (data) => data.filter((el) => isWatchedToday(el)),
+  [StatisticType.WEEK]: (data) => data.filter((el) => isWatchedWeek(el)),
+  [StatisticType.MONTH]: (data) => data.filter((el) => isWatchedMonth(el)),
+  [StatisticType.YEAR]: (data) => data.filter((el) => isWatchedYear(el)),
 };

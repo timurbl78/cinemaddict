@@ -2,13 +2,13 @@ import dayjs from 'dayjs';
 import he from 'he';
 import SmartView from './smart';
 import {humanizeFilmDuration} from '../utils/film';
-import { nanoid } from 'nanoid';
 import {KeyCodes} from '../const';
 
 export default class FilmPopup extends SmartView {
-  constructor(data) {
+  constructor(data, comments) {
     super();
     this._data = FilmPopup.parseDataToState(data);
+    this._comments = comments;
 
     this._closePopupClickHandler = this._closePopupClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
@@ -28,7 +28,7 @@ export default class FilmPopup extends SmartView {
 
   _createFilmPopupTemplate() {
     const film = this._data.film;
-    const comments = this._data.comments;
+    const comments = this._comments;
     const commentsTemplate = this._createFilPopupCommentsTemplate(comments);
 
     return `<section class="film-details">
@@ -41,7 +41,7 @@ export default class FilmPopup extends SmartView {
             <div class="film-details__poster">
               <img class="film-details__poster-img" src="${film.poster}" alt="">
 
-              <p class="film-details__age">${film.age}</p>
+              <p class="film-details__age">${film.age}+</p>
             </div>
 
             <div class="film-details__info">
@@ -121,10 +121,10 @@ export default class FilmPopup extends SmartView {
 
         ${comments.map((comment) => ` <li class="film-details__comment">
         <span class="film-details__comment-emoji">
-          <img src="./images/emoji/${comment.emoji}.png" width="55" height="55" alt="emoji-${comment.emoji}">
+          <img src="./images/emoji/${comment.emotion}.png" width="55" height="55" alt="emoji-${comment.emoji}">
         </span>
         <div>
-          <p class="film-details__comment-text">${he.encode(comment.text)}</p>
+          <p class="film-details__comment-text">${he.encode(comment.comment)}</p>
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${comment.author}</span>
             <span class="film-details__comment-day">${dayjs(comment.date).format('YYYY/MM/DD HH:mm')}</span>
@@ -205,14 +205,14 @@ export default class FilmPopup extends SmartView {
   }
 
   _sendCommentHandler(evt) {
-
     if ((evt.ctrlKey || evt.metaKey) && evt.keyCode === KeyCodes.ENTER) {
       if (!this._data.currentCommentEmoji || !this._data.currentCommentText) {
         return;
       }
-      this._data = FilmPopup.parseStateToData(this._data);
-      this.updateElement();
-      this._callback.addComment(this._data);
+      const result = FilmPopup.parseStateToData(this._data);
+      this._data = result[0];
+      const newComment = result[1];
+      this._callback.addComment(this._data, newComment);
     }
   }
 
@@ -220,9 +220,8 @@ export default class FilmPopup extends SmartView {
     evt.preventDefault();
 
     if (evt.target.tagName === 'BUTTON') {
-      this._data.comments = this._data.comments.filter((value) => value.id !== evt.target.dataset.id);
-      this.updateElement();
-      this._callback.deleteComment(this._data);
+      this._data.comments = this._data.comments.filter((value) => value !== evt.target.dataset.id);
+      this._callback.deleteComment(this._data, evt.target.dataset.id);
     }
   }
 
@@ -283,16 +282,12 @@ export default class FilmPopup extends SmartView {
   }
 
   static parseStateToData(filmData) {
-    filmData = Object.assign({}, filmData);
     const newComment = {};
-    newComment.id = nanoid();
-    newComment.text = filmData.currentCommentText;
-    newComment.emoji = filmData.currentCommentEmoji;
-    newComment.author = 'You'; // TODO
+    newComment.comment = filmData.currentCommentText;
+    newComment.emotion = filmData.currentCommentEmoji;
     newComment.date = dayjs();
-    filmData.comments.push(newComment);
     delete filmData.currentCommentText;
     delete filmData.currentCommentEmoji;
-    return filmData;
+    return [filmData, newComment];
   }
 }
